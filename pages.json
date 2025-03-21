@@ -10,14 +10,14 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarTitleText": "搜索页"
 			}
 		},
 		{
 			"path" : "pages/play_video/play_video",
 			"style" : 
 			{
-				"navigationBarTitleText" : ""
+				"navigationBarTitleText" : "播放页"
 			}
 		}
 	],
