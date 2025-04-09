@@ -31,17 +31,41 @@
 			return {
 				video_info: {},
 				search_addr: "",
-				search_addr_inx: "tenxun",
+				search_addr_inx: "https://json.heimuer.xyz",
 				search_addr_obj: [
-					{
-						text: "爱奇艺",
-						value: 'iqiyi',
-						url : 'https://m.iqiyi.com'
+					 {
+						value: 'https://json.heimuer.xyz',
+						text: '黑木耳',
+						detail: 'https://heimuer.tv'
 					},
 					{
-						text: "腾讯视频",
-						value: 'tenxun',
-						url: "https://pbaccess.video.qq.com/trpc.videosearch.mobile_search.MultiTerminalSearch/MbSearch?vplatform=2",
+						value: 'http://ffzy5.tv',
+						text: '非凡影视',
+						detail: 'http://ffzy5.tv'
+					},
+					 {
+						value: 'https://tyyszy.com',
+						text: '天涯资源',
+					},
+					 {
+						value: 'https://www.ckzy1.com',
+						text: 'CK资源',
+					},
+					 {
+						value: 'https://360zy.com',
+						text: '360资源',
+					},
+					 {
+						value: 'https://wolongzyw.com',
+						text: '卧龙资源',
+					},
+					 {
+						value: 'https://cjhwba.com',
+						text: '新华为',
+					},
+					 {
+						value: 'https://dbzy.com',
+						text: '豆瓣资源',
 					}
 				],
 				search_result: [],
@@ -69,73 +93,7 @@
 						break;
 				}
 			},
-			// 爱奇艺搜索
-			iqiyiSearch(val) {
-				axios({
-					method: "get",
-					url: this.search_addr + "/search.html?source=input&key=" + val,
-					headers: {
-						// 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/134.0.0.0 Safari/537.36 Edg/134.0.0.0',
-					}
-				}).then(async (res) => {
-					const $ = cheerio.load(res.data);
-					const urls = $(".piclist-btn a")
-					const titles = $('.piclist-title .c-title')
-					const infos = $('.piclist-title .piclist-title-link')
-					const links = $(".piclist-link")
-					let obj = {}
-					
-					for(let inx = 0; inx < links.length; inx++ ) {
-						let img_url = links.eq(inx).css('background-image').replace("url(", "");
-						img_url = img_url.replace(")", "");
-						obj = {
-							"title" : titles.eq(inx).text(),
-							"avatar" : img_url,
-							"note" : infos.eq(inx).find(".c-info").text(),
-							"url": this.search_addr_obj['iqiyi'] + links.eq(inx).attr('href')
-						}
-						
-						this.search_result.push(obj)
-					}
-				})
-			},
 			
-			// 腾讯视频搜索
-			tenxunSearch(val) {
-				uni.request({
-				    url: this.search_addr,
-				    data: {
-						"version": "25021101",
-						"clientType": 1,
-						"filterValue": "",
-						"uuid": "0F1FA9E0-B573-4DBD-901E-33BAD24A1AFC",
-						"retry": 0,
-						"query": val,
-						"pagenum": 0,
-						"pagesize": 30,
-						"queryFrom": 2,
-						"searchDatakey": "",
-						"transInfo": "",
-						"isneedQc": true,
-						"preQid": "",
-						"adClientInfo": "",
-						"extraInfo": {
-							"isNewMarkLabel": "1",
-							"multi_terminal_pc": "1",
-							"themeType": "1"
-						}
-					},
-				    header: {
-				        "Content-Type": "application/json",
-				        "Origin": "https://v.qq.com",
-				        "Referer": "https://v.qq.com/"
-				    },
-				    success: (res) => {
-				        console.log(res.data);
-						this.search_result = res
-				    }
-				});
-			},
 		}
 	}
 </script>
