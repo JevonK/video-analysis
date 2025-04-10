@@ -4,3 +4,4 @@ package-lock.json
 unpackage/cache
 unpackage/dist
 unpackage/release
+unpackage/resources

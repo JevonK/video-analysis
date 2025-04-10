@@ -10,14 +10,14 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "首页",
+				"navigationBarTitleText": "首页"
 			}
 		},
 		{
 			"path" : "pages/play_video/play_video",
 			"style" : 
 			{
-				"navigationBarTitleText" : "播放",
+				"navigationBarTitleText" : "播放"
 			}
 		}
 	],
