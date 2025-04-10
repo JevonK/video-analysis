@@ -3,7 +3,7 @@
 		<uni-row>
 			<uni-col :span="4">
 				<uni-data-select
-				  v-model="search_addr_inx"
+				  v-model="search_addr"
 				  :localdata="search_addr_obj"
 				  :clear="false"
 				  @change="changeSource"
@@ -14,10 +14,16 @@
 				<uni-search-bar radius="100" placeholder="输入需要搜索的名称" clearButton="none" cancelButton="none" @confirm="search" />
 			</uni-col>
 		</uni-row>
-			{{ search_result }}
 		<uni-list>
-			<uni-list-item v-for="item in search_result" :title="item.title" :note="item.note"  :thumb="item.avatar"
-			 thumb-size="lg" :to="'../play_video/play_video?url=' + item.url"></uni-list-item>
+			<uni-list-item v-for="item in search_result" :title="item.vod_name" :note="item.vod_content"  :thumb="item.vod_pic" :rightText="item.type_name"
+			 thumb-size="lg" @click="gotoPath(item)" clickable>
+				<template v-slot:body>
+					<view class="uni-list-item__content uni-list-item__contentcenter">
+						<text class="uni-list-item__content-title">{{ item.vod_name }}</text>
+						<text class="uni-list-item__content-note">{{ item.vod_content }}</text>
+					</view>
+				</template>
+			 </uni-list-item>
 		</uni-list>
 	</view>
 </template>
@@ -29,9 +35,10 @@
 	export default {
 		data() {
 			return {
+				proxy_url : 'https://proxy.mengze.vip/proxy/',
+				hoplayer_url : 'https://hoplayer.com/index.html',
 				video_info: {},
-				search_addr: "",
-				search_addr_inx: "https://json.heimuer.xyz",
+				search_addr: "https://json.heimuer.xyz",
 				search_addr_obj: [
 					 {
 						value: 'https://json.heimuer.xyz',
@@ -72,39 +79,70 @@
 			}
 		},
 		onLoad() {
-			this.changeSource(this.search_addr_inx)
 		},
 		methods: {
-			// 设置搜索平台
-			changeSource(val) {
-				for (const item of this.search_addr_obj) {
-					if (item['value'] == val) {
-						this.search_addr = item['url'];
-					}
-				}
-			},
 			search(item) {
-				switch(this.search_addr_inx) {
-					case 'iqiyi':
-						this.iqiyiSearch(item['value'])
-						break;
-					case 'tenxun':
-						this.tenxunSearch(item['value'])
-						break;
-				}
+				console.log(item)
+				const api_url = this.search_addr + "/api.php/provide/vod/?ac=videolist&wd=" + item['value']
+				uni.request({
+					url: this.proxy_url + encodeURIComponent(api_url),
+					method:'GET',
+					success: (res) => {
+						const data = res.data;
+						if (data.code == 1) {
+							this.search_result = data.list
+						} else {
+							
+						}
+						console.log(res);
+					}
+				})
 			},
+			// 跳转页面
+			gotoPath(item) {
+				console.log(item)
+				uni.setStorage({
+					key: 'video_info',
+					data: item,
+					success: function () {
+						uni.navigateTo({
+							url: "/pages/play_video/play_video"
+						})
+					},
+					fail: function () {
+						
+					}
+				});
+				
+			}
 			
 		}
 	}
 </script>
 
-<style>
-	.content {
-		.search-input {
-			
-		}
-		.search-btn {
-			
-		}
+<style lang="scss">
+	.uni-list-item__content {
+		display: flex;
+		padding-right: 8px;
+		flex: 1;
+		color: #3b4144;
+		flex-direction: column;
+		justify-content: space-between;
+		overflow: hidden;
+	}
+	.uni-list-item__content-title {
+		font-size: 14px;
+		color: #3b4144;
+		overflow: hidden;
+	}
+	.uni-list-item__content-note {
+		margin-top: 0.1875rem;
+		color: #999;
+		font-size: 12px;
+		overflow: hidden;
+		word-break:break-all;
+		display:-webkit-box;
+		-webkit-line-clamp:2;
+		-webkit-box-orient:vertical;
 	}
 </style>
